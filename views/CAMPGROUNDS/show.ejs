@@ -1,0 +1,61 @@
+<% layout('../layouts/boilerplate') %>
+<div class="row">
+  <div class="card mb-3 col-4 p-0" style="width: 20rem;">
+    <img src="<%= campground.image %>" class="card-img-top img-fluid" alt="...">
+    <div class="card-body">
+      <h5 class="card-title"><%= campground.title %></h5>
+      <p class="card-text"><%= campground.description %></p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">$<%= campground.price %></li>
+      <li class="list-group-item"></i><%= campground.location %></li>
+    </ul>
+    <div class="card-body">
+        <div class="d-flex justify-content-start mb-3">
+            <a class="btn btn-warning me-2" href="/campgrounds/<%= campground._id %>/edit">Edit</a>
+            <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="post">
+                <button class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+        <a href="/campgrounds" class="card-link">show all Campgrounds</a>
+    </div>
+  </div>
+  <div class="col-1"></div>
+    <div class="col">
+      <div class="comment-box" data-spy="scroll" style=" max-height: 800px; overflow-y: auto;">
+          <% for (let item of campground.reviews) {%>
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">Rating: <%= item.rating %></h5>
+                <p class="card-text"><%= item.body %></p>
+                <!-- <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a> -->
+                <form action="/campgrounds/<%= campground._id %>/reviews/<%= item._id %>?_method=DELETE" method="post">
+                  <button type="submit" class="btn btn-sm  btn-danger">Delete</button>
+                </form>
+              </div>
+            </div>
+          <%}%>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="mb-2">
+    <form class="mb-3 needs-validation" action="/campgrounds/<%= campground._id %>/reviews" method="post" novalidate>
+        <h3 class="mb-3">Leave a Review</h3>
+        <div class="mb-3">
+            <label class="form-label" for="range">Rating</label>
+            <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="range" step="1">
+        </div>
+        <div class="mb-3">
+            <label for="body">Write a Review</label>
+            <textarea class="form-control" name="review[body]" id="body" rows="5" cols="30" required></textarea>
+            <div class="valid-feedback">
+                Looks good!
+              </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+    </form>
+</div>
+
