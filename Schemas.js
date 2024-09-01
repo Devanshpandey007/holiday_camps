@@ -1,5 +1,5 @@
 const Joi  = require('joi');
-const campground = require('./model/campground');
+// const campground = require('./model/campground');
 
 module.exports.campgroundSchema = Joi.object({
     campground: Joi.object({
