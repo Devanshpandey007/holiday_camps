@@ -19,6 +19,20 @@
             <a class="nav-link disabled" aria-disabled="true">Disabled</a>
           </li>
         </ul>
+        <ul class="navbar-nav ms-auto">
+          <% if (!userStatus) {%>
+            <li class="nav-item ms-auto"></li>
+            <a class="nav-link" href="/login">Login</a>
+            </li>
+            <li class="nav-item ms-auto"></li>
+              <a class="nav-link" href="/register">Register</a>
+            </li>
+          <%} else {%>
+            <li class="nav-item ms-auto"></li>
+            <a class="nav-link" href="/logout">Logout</a>
+            </li>
+         <%}%>
+        </ul>
       </div>
     </div>
 </nav>

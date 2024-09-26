@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const appError = require("../appError");
+const AppError = require("../appError");
 const Campground = require('../model/campground');
 const {campgroundSchema} = require('../Schemas')
-
 const mongoose = require('mongoose');
+const {personAuthenticated} = require('../middleware');
+const joi = require('joi');
 
 main().catch(err => console.log(err));
 
@@ -15,27 +16,27 @@ async function main() {
   // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
 
-const validateCampground = (req,res,next) =>{
-    const {error} = campgroundSchema.validate(req.body);
-    if (error){
+const validateCampground = (req, res, next) => {
+    const { error } = campgroundSchema.validate(req.body);
+    if (error) {
         const msg = error.details.map(el => el.message).join(',');
-        throw new appError(msg,400);
+        console.log(msg);
+        throw new AppError(msg, 400); 
     }
-    else{
-        next();
-    }
-}
+    next();
+};
+
 
 router.get('/', async(req, res)=>{
     const campgrounds = await Campground.find({});
     res.render('CAMPGROUNDS/index', {campgrounds});
 });
 
-router.get('/new', (req,res)=>{
+router.get('/new', personAuthenticated, (req,res)=>{
     res.render('CAMPGROUNDS/new');
 });
 
-router.get('/:id/edit', async (req,res)=>{
+router.get('/:id/edit',personAuthenticated, async (req,res)=>{
     const campground = await Campground.findById(req.params.id);
     res.render('CAMPGROUNDS/edit', {campground});
 });
@@ -44,7 +45,7 @@ router.get('/:id', async (req,res,next)=>{
     try{
         const campground = await Campground.findById(req.params.id).populate('reviews');
         if (!campground){
-            throw new routerError("Object with this id does not exist", 404);
+            throw new AppError("Object with this id does not exist", 404);
         }
         res.render('CAMPGROUNDS/show', {campground});
     }
@@ -53,26 +54,47 @@ router.get('/:id', async (req,res,next)=>{
     }
 });
 
-router.post('/', validateCampground ,async (req,res,next)=>{
-    
-    const campground = new Campground(req.body);
-    await campground.save();
-    res.redirect('/');
-    
+router.post('/',personAuthenticated ,validateCampground, async (req, res, next) => {
+    try {
+        const campground = new Campground(req.body.campground); 
+        await campground.save();
+        req.flash('success', 'Successfully created a new Campground!');
+        res.redirect('/campgrounds');
+    } catch(e) {
+        console.error('Error creating campground:', e);
+        next(e);
+    }
 });
 
-router.put('/:id', async (req,res)=>{
-    const {id} = req.params;
-    const updatedcampground = await Campground.findByIdAndUpdate(id, req.body);
-    console.log(updatedcampground);
-    res.redirect(`/${updatedcampground.id }`);
+
+
+router.put('/:id', personAuthenticated, async (req,res, next)=>{
+    try{
+        const {id} = req.params;
+        const updatedcampground = await Campground.findByIdAndUpdate(id, req.body);
+        console.log(updatedcampground);
+        res.redirect(`/campgrounds/${updatedcampground.id }`);
+    }
+    catch(e){
+        console.log(e.message);
+        next(e);
+    }
 });
 
-router.delete('/:id', async (req,res)=>{
-    const {id} = req.params;
-    const deletedCampground =await  Campground.findByIdAndDelete(id, req.body);
-    console.log(deletedCampground);
-    res.redirect('/');
+router.delete('/:id', personAuthenticated, async (req,res, next)=>{
+    try{
+        const {id} = req.params;
+        const deletedCampground = await Campground.findByIdAndDelete(id, req.body);
+        console.log(deletedCampground);
+        req.flash('deleted', 'Successfully deleted the Campground!')
+        res.redirect('/campgrounds');
+    }
+    catch(e){
+        console.log(e);
+        next(e);
+    }
 });
+
+
 
 module.exports = router;

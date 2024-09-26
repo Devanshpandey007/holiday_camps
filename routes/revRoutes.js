@@ -1,11 +1,11 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 const AppError = require("../appError");
 const Campground = require('../model/campground');
 const Review = require('../model/review');
 const {reviewSchema} = require('../Schemas')
-
 const mongoose = require('mongoose');
+const {personAuthenticated} = require('../middleware');
 
 main().catch(err => console.log(err));
 
@@ -16,6 +16,7 @@ async function main() {
   // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
 
+
 const validateReview = (req,res,next)=>{
     const {error} = reviewSchema.validate(req.body);
     if (error){
@@ -24,11 +25,11 @@ const validateReview = (req,res,next)=>{
         throw new AppError(msg,400);
     }
     else{
-        next();
+        next(); 
     }
 }
 
-router.post('/campgrounds/:id/reviews', validateReview, async (req, res)=>{
+router.post('/',personAuthenticated , validateReview, async (req, res)=>{
     const review = new Review(req.body.review);
     const id = req.params.id;
     const thisCampground = await Campground.findById(id);
@@ -39,15 +40,16 @@ router.post('/campgrounds/:id/reviews', validateReview, async (req, res)=>{
     res.redirect(`/campgrounds/${id}`);
 });
 
-router.delete('/campgrounds/:id/reviews/:reviewId', async (req, res, next)=>{
+router.delete('/:reviewId', personAuthenticated, async (req, res, next)=>{
     try{
         const {id, reviewId} = req.params;
         const cgChanges = await  Campground.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
         const revChanges = await Review.findByIdAndDelete(reviewId);
         res.redirect(`/campgrounds/${cgChanges.id}`)
     }
-    catch (err){
-        next(err);
+    catch (e){
+        console.log(e);
+        next(e);
     }
 });
 
