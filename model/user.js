@@ -3,6 +3,7 @@ const app = express();
 const plm = require('passport-local-mongoose');
 const mongoose = require('mongoose');
 const { required } = require('joi');
+const campground = require('./campground');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({

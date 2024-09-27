@@ -43,7 +43,7 @@ router.get('/:id/edit',personAuthenticated, async (req,res)=>{
 
 router.get('/:id', async (req,res,next)=>{
     try{
-        const campground = await Campground.findById(req.params.id).populate('reviews');
+        const campground = await Campground.findById(req.params.id).populate('reviews').populate('author');
         if (!campground){
             throw new AppError("Object with this id does not exist", 404);
         }

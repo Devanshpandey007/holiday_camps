@@ -20,7 +20,8 @@ const seeDb = async()=>{
             location: `${cities[randnum].city}, ${cities[randnum].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
             description:`${sample(campsiteDescriptions)}`,
-            price: 999  
+            price: 999,
+            author: "66f409ee86fcf5e76a8abbf5"  
         });
         await c.save();
     }   

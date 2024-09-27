@@ -5,7 +5,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const personAuthentication = require('../middleware'); 
 const user = require('../model/user');
-
+const {saveUrl}  = require('../middleware');
 
 router.get('/register', (req,res)=>{
     res.render('USER/register');
@@ -19,9 +19,9 @@ router.post('/register', async (req, res, next)=>{
         await registeredUser.save();
         req.login(registeredUser, err =>{
             if (err) return next(err);
+            req.flash('success', 'welcome to the yelp-camp');
+            res.redirect('/campgrounds');
         })
-        req.flash('success', 'welcome to the yelp-camp');
-        res.redirect('/campgrounds');
     }
     catch(e){
         req.flash('failure', e.message);
@@ -45,13 +45,15 @@ router.get('/logout', (req,res,next)=>{
 });
 
 
-router.post('/login', 
-    passport.authenticate('local', {failureFlash:'try again!', failureRedirect: '/login' }),
-    function(req, res) {
-        req.flash('success', 'Successfully Loggedin');
-        res.redirect('/campgrounds');
-    }
-);
+router.post('/login', saveUrl, passport.authenticate('local', {
+    failureFlash: 'Try again!',
+    failureRedirect: '/login'
+}), (req, res) => {
+    const redirectUrl = res.locals.returnTo || "/campgrounds";
+    req.flash('success', 'Successfully Logged in');
+    res.redirect(redirectUrl);
+});
+
 
 
 
