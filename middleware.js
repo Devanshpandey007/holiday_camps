@@ -1,3 +1,5 @@
+const campground = require("./model/campground");
+
 module.exports.personAuthenticated = (req,res,next)=>{
     try{
         if(!req.isAuthenticated()){
@@ -22,4 +24,20 @@ module.exports.saveUrl = (req, res, next)=>{
     next();
       
 };
+
+module.exports.authorization =  async (req,res,next)=>{
+    try{
+        const {id} = req.params;
+        const campground = await Campground.findById(id);
+        if (userStatus && campground){
+            if (userStatus.equals(campground.author)){
+                return next();
+            }
+        }
+    }
+    catch(e){
+        console.log(e);
+        next(e);
+    }
+}
 

@@ -6,7 +6,7 @@ const {campgroundSchema} = require('../Schemas')
 const mongoose = require('mongoose');
 const {personAuthenticated} = require('../middleware');
 const joi = require('joi');
-
+const {authorization} = require('../middleware')
 main().catch(err => console.log(err));
 
 async function main() {
@@ -32,11 +32,11 @@ router.get('/', async(req, res)=>{
     res.render('CAMPGROUNDS/index', {campgrounds});
 });
 
-router.get('/new', personAuthenticated, (req,res)=>{
+router.get('/new', a, personAuthenticated, (req,res)=>{
     res.render('CAMPGROUNDS/new');
 });
 
-router.get('/:id/edit',personAuthenticated, async (req,res)=>{
+router.get('/:id/edit', authorization,personAuthenticated, async (req,res)=>{
     const campground = await Campground.findById(req.params.id);
     res.render('CAMPGROUNDS/edit', {campground});
 });
@@ -56,7 +56,8 @@ router.get('/:id', async (req,res,next)=>{
 
 router.post('/',personAuthenticated ,validateCampground, async (req, res, next) => {
     try {
-        const campground = new Campground(req.body.campground); 
+        const campground = new Campground(req.body.campground);
+        campground.author = req.user._id; 
         await campground.save();
         req.flash('success', 'Successfully created a new Campground!');
         res.redirect('/campgrounds');
@@ -68,7 +69,7 @@ router.post('/',personAuthenticated ,validateCampground, async (req, res, next) 
 
 
 
-router.put('/:id', personAuthenticated, async (req,res, next)=>{
+router.put('/:id', authorization, personAuthenticated, async (req,res, next)=>{
     try{
         const {id} = req.params;
         const updatedcampground = await Campground.findByIdAndUpdate(id, req.body);
@@ -81,7 +82,7 @@ router.put('/:id', personAuthenticated, async (req,res, next)=>{
     }
 });
 
-router.delete('/:id', personAuthenticated, async (req,res, next)=>{
+router.delete('/:id', authorization, personAuthenticated, async (req,res, next)=>{
     try{
         const {id} = req.params;
         const deletedCampground = await Campground.findByIdAndDelete(id, req.body);
