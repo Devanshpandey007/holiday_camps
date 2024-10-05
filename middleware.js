@@ -1,10 +1,9 @@
-const campground = require("./model/campground");
+const Campground = require("./model/campground");
 
-module.exports.personAuthenticated = (req,res,next)=>{
+module.exports.isLoggedIn = (req,res,next)=>{
     try{
         if(!req.isAuthenticated()){
             req.session.returnTo = req.originalUrl;
-            console.log(req.session.returnTo);
             req.flash('error','login to get access!');
             return res.redirect('/login');
         }
@@ -29,8 +28,8 @@ module.exports.authorization =  async (req,res,next)=>{
     try{
         const {id} = req.params;
         const campground = await Campground.findById(id);
-        if (userStatus && campground){
-            if (userStatus.equals(campground.author)){
+        if (req.user._id && campground){
+            if (req.user._id.equals(campground.author)){
                 return next();
             }
         }
@@ -41,3 +40,14 @@ module.exports.authorization =  async (req,res,next)=>{
     }
 }
 
+module.exports.feedbackAuth = (req,res,next)=>{
+    try{
+        if (req.user._id == Campground._id){
+            next();
+        }
+    }
+    catch(e){
+        req.flash('error', e.message);
+    }
+    
+}

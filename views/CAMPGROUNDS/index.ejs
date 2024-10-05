@@ -1,29 +1,33 @@
 <% layout('../layouts/boilerplate') %>
+<link rel="stylesheet" href="/style/style.css">
 
-<h1>List of all avaialable Campgrounds</h1>
 
-<section class="container mt-4">
-    <% for (let cg of campgrounds) { %>
-        <!-- <li><a href="/campgrounds/<%= cg._id %>"></a></li> -->
-        <div class="card mb-3">
-            <div class="row">
-                <div class="col-md-4">
-                    <img class="img-fluid" src="<%= cg.image %>" alt="oops!">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h2 class="pt-3"><%= cg.title %></h2>
-                        <p class="card-text"><h5><%= cg.description %></h5></p>
-                        <p class="card-text">
-                            <small class="text-muted"><%= cg.location %></small>
-                            <br>
-                            <small class="text-muted">$<%= cg.price %></small>
-                        </p>
-                        <a href="/campgrounds/<%= cg.id %>"><button class="btn btn-primary">View campground</button></a>
+<div class="main-body">
+    <h1 style="text-align: center; text-decoration: underline 2px black;">List of all avaialable Campgrounds</h1>
+    <br>
+    <section class="container m-0 p-0">
+        <% for (let cg of campgrounds) { %>
+            <!-- <li><a href="/campgrounds/<%= cg._id %>"></a></li> -->
+            <div class="card mb-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img class="img-fluid" src="<%= cg.image %>" alt="oops!">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h2 class="pt-3"><%= cg.title %></h2>
+                            <p class="card-text"><h5><%= cg.description %></h5></p>
+                            <p class="card-text">
+                                <small class="text-muted"><%= cg.location %></small>
+                                <br>
+                                <small class="text-muted">$<%= cg.price %></small>
+                            </p>
+                            <a href="/campgrounds/<%= cg.id %>"><button class="btn btn-primary">View campground</button></a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    <%}%>
-</section>
+        <%}%>
+    </section>
+</div>
 

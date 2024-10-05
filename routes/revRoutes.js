@@ -5,17 +5,8 @@ const Campground = require('../model/campground');
 const Review = require('../model/review');
 const {reviewSchema} = require('../Schemas')
 const mongoose = require('mongoose');
-const {personAuthenticated} = require('../middleware');
-
-main().catch(err => console.log(err));
-
-async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/yel-camp');
-  console.log("database connected!")
-
-  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
-}
-
+const {isLoggedIn} = require('../middleware');
+const {feedbackAuth} = require('../middleware');
 
 const validateReview = (req,res,next)=>{
     const {error} = reviewSchema.validate(req.body);
@@ -29,18 +20,19 @@ const validateReview = (req,res,next)=>{
     }
 }
 
-router.post('/',personAuthenticated , validateReview, async (req, res)=>{
+router.post('/',isLoggedIn , validateReview, async (req, res)=>{
     const review = new Review(req.body.review);
+    review.author = req.user._id;
     const id = req.params.id;
     const thisCampground = await Campground.findById(id);
-    thisCampground.reviews.push(review);
+    await thisCampground.reviews.push(review);
     await review.save();
     await thisCampground.save();
     console.log("comment added");
     res.redirect(`/campgrounds/${id}`);
 });
 
-router.delete('/:reviewId', personAuthenticated, async (req, res, next)=>{
+router.delete('/:reviewId', isLoggedIn, async (req, res, next)=>{
     try{
         const {id, reviewId} = req.params;
         const cgChanges = await  Campground.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});

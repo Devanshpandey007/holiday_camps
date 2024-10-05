@@ -16,6 +16,13 @@ const userSchema = new Schema({
         type: String,
         required : true,
         unique : true
+    },
+    img :{
+        type: String,
+        unique : true
+    },
+    bio :{
+        type: String
     }
 });
 

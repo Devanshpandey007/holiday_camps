@@ -20,18 +20,29 @@
           </li>
         </ul>
         <ul class="navbar-nav ms-auto">
-          <% if (!userStatus) {%>
-            <li class="nav-item ms-auto"></li>
-            <a class="nav-link" href="/login">Login</a>
-            </li>
-            <li class="nav-item ms-auto"></li>
-              <a class="nav-link" href="/register">Register</a>
-            </li>
-          <%} else {%>
-            <li class="nav-item ms-auto"></li>
-            <a class="nav-link" href="/logout">Logout</a>
-            </li>
-         <%}%>
+          <!-- Profile Icon Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle p-0" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person fs-4"></i> <!-- Profile icon -->
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <% if (!userStatus) {%>
+                <li class="nav-item ms-auto"></li>
+                <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li class="nav-item ms-auto"></li>
+                  <a class="nav-link" href="/register">Register</a>
+                </li> 
+                <%} else {%>
+                  <li class="nav-item ms-auto"></li>
+                    <a class="nav-link" href="/user/<%= userStatus._id %>">Profile</a>
+                  </li>
+                  <li class="nav-item ms-auto"></li>
+                  <a class="nav-link" href="/logout">Logout</a>
+                  </li>
+                <%}%>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>

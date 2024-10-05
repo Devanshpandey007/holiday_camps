@@ -21,7 +21,7 @@ const seeDb = async()=>{
             title: `${sample(descriptors)} ${sample(places)}`,
             description:`${sample(campsiteDescriptions)}`,
             price: 999,
-            author: "66f409ee86fcf5e76a8abbf5"  
+            author: "66f11824f9c83138bc3aa246"  
         });
         await c.save();
     }   

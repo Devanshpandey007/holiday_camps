@@ -1,61 +1,43 @@
 <% layout('../layouts/boilerplate') %>
-<div class="row">
-    <h1 class="text-center"> Add New Campground</h1>
-    <div class="col-6 offset-3 mt-3">
-        <form class="needs-validation" action="/campgrounds" method="post" novalidate>
-            <div class="mb-3">
-                <label class="form-labe;" for="Title">Title</label>
-                <input class="form-control" type="text" name="campground[title]" id="Title" required>
-                <div class="valid-feedback">Looks good!</div>
-            </div>
-            <div class="mb-3">
-                <label class="form-labe" for="Image">Image Url</label>
-                <input class="form-control" type="text" name="campground[image]" id="Image" required>
-                <div class="valid-feedback">Looks good!</div>
-            </div>
-            <div class="mb-3">
-                <label class="form-labe" for="Price">Price</label>
-                <div class="input-group" required>
-                    <div class="input-group-text">$</div>
-                    <input class="form-control" type="number" name="campground[price]" id="Price" placeholder="0.00">
+<link rel="stylesheet" href="/style/style.css">
+
+<div class="main-body">
+    <div class="row mb-3">
+        <h1 class="text-center"> Add New Campground</h1>
+        <div class="col-6 offset-3 mt-3">
+            <form class="needs-validation" action="/campgrounds" method="post" novalidate>
+                <div class="mb-3">
+                    <label class="form-labe;" for="Title">Title</label>
+                    <input class="form-control" type="text" name="campground[title]" id="Title" required>
                     <div class="valid-feedback">Looks good!</div>
                 </div>
-            </div>
-            <div class="mb-3">
-                <label class="form-labe" for="Location">Location</label>
-                <input class="form-control" type="text" name="campground[location]" id="Location" required>
-                <div class="valid-feedback">Looks good!</div>
-            </div>
-            <div class="mb-3">
-                <label class="form-labe" for="Description">Description</label>
-                <textarea class="form-control" name="campground[description]" id="Description" required></textarea>
-                <div class="valid-feedback">Looks good!</div>
-            </div>
-            <br>
-            <button class="btn btn-primary">Add Camp</button>
-        </form>
-        <script>
-            // Example starter JavaScript for disabling form submissions if there are invalid fields
-            (function () {
-            'use strict'
-
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.querySelectorAll('.needs-validation')
-
-            // Loop over them and prevent submission
-            Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                    }
-
-                    form.classList.add('was-validated')
-                }, false)
-                })
-            })()
-        </script>
-    </div>
+                <div class="mb-3">
+                    <label class="form-labe" for="Image">Image Url</label>
+                    <input class="form-control" type="text" name="campground[image]" id="Image" required>
+                    <div class="valid-feedback">Looks good!</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-labe" for="Price">Price</label>
+                    <div class="input-group" required>
+                        <div class="input-group-text">$</div>
+                        <input class="form-control" type="number" name="campground[price]" id="Price" placeholder="20/night" required>
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-labe" for="Location">Location</label>
+                    <input class="form-control" type="text" name="campground[location]" id="Location" required>
+                    <div class="valid-feedback">Looks good!</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-labe" for="Description">Description</label>
+                    <textarea class="form-control" name="campground[description]" id="Description" required></textarea>
+                    <div class="valid-feedback">Looks good!</div>
+                </div>
+                <br>
+                <button class="btn btn-primary">Add Camp</button>
+            </form>
+        </div>
+    </div>    
 </div>
 

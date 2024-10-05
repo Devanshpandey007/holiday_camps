@@ -29,6 +29,7 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views',path.join(__dirname,'views'));
 
+
 const mongoose = require('mongoose');
 
 
@@ -43,6 +44,7 @@ async function main() {
 app.use(methodOverride('_method'));
 app.use(express.urlencoded({extended :true}));
 app.use(session(sessionConfig));
+app.use(express.static(path.join(__dirname,'public')));
 app.use(passport.session());
 app.use(flash());
 app.use((req,res,next)=>{
