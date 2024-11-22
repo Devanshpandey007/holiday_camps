@@ -18,8 +18,7 @@ const userSchema = new Schema({
         unique : true
     },
     img :{
-        type: String,
-        unique : true
+        type: String
     },
     bio :{
         type: String

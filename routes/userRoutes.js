@@ -5,13 +5,18 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const personAuthentication = require('../middleware'); 
 const {saveUrl}  = require('../middleware');
+const {storage, cloudinary} = require('../Cloudinary_storage/index');
+const multer  = require('multer');
+const upload = multer({storage});
 
 
 
-router.post('/register', async (req, res, next)=>{
+router.post('/register', upload.single('img'), async (req, res, next)=>{
     try{
-        const {email, username,img,  bio, password} = req.body;
-        const user =  new User({username: username, email: email, img : img, bio: bio});
+        const {email, username, bio, password} = req.body;
+        const imgPath = req.file.path;
+        const user =  new User({username: username, email: email, img: imgPath, bio: bio});
+        console.log(user);
         const registeredUser =  await User.register(user,password);
         await registeredUser.save();
         req.login(registeredUser, err =>{
@@ -68,11 +73,13 @@ router.get('/user/:id/edit', async (req, res, next)=>{
     }
 });
 
-router.patch('/user/:id', async(req,res,next)=>{
+router.patch('/user/:id',upload.single('img') ,async(req,res,next)=>{
     try{
         const {id} = req.params;
-        const {img, bio} = req.body;
-        const user = await User.findByIdAndUpdate(id, {img : img, bio: bio},{new: true});
+        const {bio} = req.body;
+        const imgPath = req.file.path;
+        console.log(imgPath);
+        const user = await User.findByIdAndUpdate(id, {img : imgPath, bio: bio},{new: true});
         await user.save();
         res.redirect(`/user/${id}`);
     }
@@ -81,16 +88,25 @@ router.patch('/user/:id', async(req,res,next)=>{
     }
 });
 
-router.post('/login', saveUrl, passport.authenticate('local', {
-    failureFlash: 'Try again!',
-    failureRedirect: '/login'
-}), (req, res) => {
-    const redirectUrl = res.locals.returnTo || "/campgrounds";
-    req.flash('success', 'Successfully Logged in');
-    res.redirect(redirectUrl);
+router.post('/login', saveUrl, (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            return next(err); 
+        }
+        if (!user) {
+            req.flash('failure', info.message || 'Invalid username or password.');
+            return res.redirect('/login');
+        }
+        req.login(user, (loginErr) => {
+            if (loginErr) {
+                return next(loginErr); // Handle login error
+            }
+            req.flash('success', 'Successfully Logged in');
+            const redirectUrl = res.locals.returnTo || '/campgrounds';
+            res.redirect(redirectUrl);
+        });
+    })(req, res, next);
 });
-
-
 
 
 module.exports = router;

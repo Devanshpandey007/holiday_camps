@@ -5,8 +5,13 @@
 <div class="main-body">
     <div class="container m-0">
         <div class="row">
-            <div class="col-2"></div>
-            <div class="col">
+            <div class="col-3">
+                <div class="card" style="width: 18rem;">
+                    <img src="<%= user.img %>" class="card-img-top" alt="...">
+                </div>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-8">
                 <form action="/user/<%= user._id %>/edit" method="get" class="needs-validation" novalidate>
                     <div class="mb-3 row">
                         <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
@@ -22,13 +27,13 @@
                             <div class="valid-feedback">Looks good!</div>
                         </div>
                     </div>
-                    <div class="mb-3 row">
+                    <!-- <div class="mb-3 row">
                         <label for="img" class="col-sm-2 col-form-label">Image</label>
                         <div class="col-sm-10 d-flex align-items-center">
                             <span class="input-group-text">Img</span>
                             <input type="text" readonly class="form-control ms-2" id="img" name="img" style="width: 600px;" value= "<%= user.img %>">
                         </div>
-                    </div>
+                    </div> -->
                     <div class="mb-3 row">
                         <label for="inputBio" class="col-sm-2 col-form-label">Bio</label>
                         <div class="col-sm-10">

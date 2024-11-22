@@ -4,5 +4,7 @@
     <h4 class="alert-heading">Error!</h4>
     <p>Status Code -> <%= status %></p>
     <hr>
-    <p class="mb-0"><%= message %></p>
+    <%if (process.env.NODE_ENV !== 'production') {%>
+      <p class="mb-0"><%= message %></p>
+    <%}%>
   </div>

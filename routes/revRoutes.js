@@ -3,22 +3,16 @@ const router = express.Router({mergeParams: true});
 const AppError = require("../appError");
 const Campground = require('../model/campground');
 const Review = require('../model/review');
-const {reviewSchema} = require('../Schemas')
-const mongoose = require('mongoose');
 const {isLoggedIn} = require('../middleware');
 const {feedbackAuth} = require('../middleware');
+const {validateReview} = require('../middleware');  
 
-const validateReview = (req,res,next)=>{
-    const {error} = reviewSchema.validate(req.body);
-    if (error){
-        const msg = error.details.map(el => el.message).join(',');
-        console.log(msg);
-        throw new AppError(msg,400);
-    }
-    else{
-        next(); 
-    }
-}
+
+router.get('/', async (req, res) => {
+    const { id } = req.params;
+    res.redirect(`/campgrounds/${id}`);
+});
+
 
 router.post('/',isLoggedIn , validateReview, async (req, res)=>{
     const review = new Review(req.body.review);
@@ -44,5 +38,7 @@ router.delete('/:reviewId', isLoggedIn, async (req, res, next)=>{
         next(e);
     }
 });
+
+
 
 module.exports = router;

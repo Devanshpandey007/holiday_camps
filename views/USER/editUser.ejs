@@ -3,10 +3,10 @@
 
 <div class="main-body">
     <div class="container m-0">
-        <div class="row">
+        <div class="row"> 
             <div class="col-2"></div>
             <div class="col">
-                <form action="/user/<%= user._id %>?_method=PATCH" method="post" class="needs-validation" novalidate>
+                <form action="/user/<%= user._id %>?_method=PATCH" method="post" class="needs-validation" enctype="multipart/form-data" novalidate>
                     <div class="mb-3 row">
                         <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
@@ -24,8 +24,7 @@
                     <div class="mb-3 row">
                         <label for="img" class="col-sm-2 col-form-label">Image</label>
                         <div class="col-sm-10 d-flex align-items-center">
-                            <span class="input-group-text">Img</span>
-                            <input type="text" class="form-control ms-2" id="img" name="img" style="width: 600px;" value="<%= user.img %>">
+                            <input type="file" class="form-control ms-2" id="img" name="img">
                         </div>
                     </div>
                     <div class="mb-3 row">
